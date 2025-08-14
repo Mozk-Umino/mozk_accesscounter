@@ -1,0 +1,50 @@
+<div id="counter">
+  <div>
+    <div>今日のPV数</div>
+    <div id="todayCounter"></div>
+  </div>
+
+  <!-- 1行分の空白 -->
+  <div style="height: 1em;"></div>
+
+  <div>
+    <div>総PV数</div>
+    <div id="totalCounter"></div>
+  </div>
+</div>
+
+<script>
+fetch('https://script.google.com/macros/s/AKfycbxbJRhFaEyLwV65fDjqyLrWQX9RQw6FzPWkFCLN0jhzlCSvfa_Wdwjn8XDjUyFS7adD/exec')
+  .then(res => res.json())
+  .then(data => {
+    console.log('API Response:', data); // デバッグ
+
+    const todayPV = Number(data.today ?? 0);
+    const totalPV = Number(data.total ?? 0);
+
+    const todayDiv = document.getElementById('todayCounter');
+    const totalDiv = document.getElementById('totalCounter');
+
+    // 今日のPV表示（7桁ゼロ埋め）
+    todayDiv.innerHTML = '';
+    String(todayPV).padStart(7, '0').split('').forEach(num => {
+      const img = document.createElement('img');
+      img.src = `img_today/${num}.gif`;
+      img.alt = num;
+      todayDiv.appendChild(img);
+    });
+
+    // 総PV表示（7桁ゼロ埋め）
+    totalDiv.innerHTML = '';
+    String(totalPV).padStart(7, '0').split('').forEach(num => {
+      const img = document.createElement('img');
+      img.src = `img_total/${num}.gif`;
+      img.alt = num;
+      totalDiv.appendChild(img);
+    });
+  })
+  .catch(e => {
+    console.error(e);
+    document.getElementById('counter').textContent = 'Error loading counter';
+  });
+</script>
